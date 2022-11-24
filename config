@@ -1,0 +1,106 @@
+#####################################
+#    GENERIC CONFIG FOR ALL 
+#####################################
+Host *
+    IdentityFile ~/.ssh/id_rsa
+    IdentityFile ~/.ssh/1.pem
+    IdentityFile ~/.ssh/2.pem
+    IdentityFile ~/.ssh/3.pem
+    StrictHostKeyChecking no
+    IdentitiesOnly yes
+    ControlMaster auto
+    AddKeysToAgent yes
+    User ec2-user
+    ForwardAgent yes
+    RequestTTY auto
+    Compression yes
+
+##########################
+#    BASTIONES COMPANY
+##########################
+
+########### ENVIRONMENT1 #############
+Host environment1-bastion
+    HostName 108.193.141.101
+    IdentityFile ~/.ssh/environment1-bastion-ssh-key.pem
+########### ENVIRONMENT2  ###################
+Host environment2-bastion
+     HostName 108.196.129.101
+     IdentityFile ~/.ssh/environment2-bastion-ssh-key.pem
+########### ENVIRONMENT3  #################
+Host environment3-bastion
+     HostName 108.198.128.101
+     IdentityFile ~/.ssh/environment3-bastion-ssh-key.pem
+########### ENVIRONMENT4 #############
+Host environment4-bastion
+     HostName 108.193.153.101
+     IdentityFile ~/.ssh/environment4-bastion-ssh-key.pem
+########### ENVIRONMENT5 #############
+Host environment5-bastion
+     HostName 108.193.136.101
+     IdentityFile ~/.ssh/environment5-bastion-ssh-key.pem
+########## ENVIRONMENT6 #############
+Host environment6-bastion
+     HostName 108.195.240.101
+     IdentityFile ~/.ssh/environment6-bastion-ssh-key.pem
+##########  ENVIRONMENT7 ###############
+Host environment7-bastion
+     HostName 108.193.132.101
+     IdentityFile ~/.ssh/environment7-bastion-ssh-key.pem
+
+##########################
+#    DBTOOLS COMPANY
+##########################
+
+########### ENVIRONMENT1 #############
+Host environment1-dbtools
+    HostName environment1-dbt.1-transfer.com
+    ProxyJump environment1-bastion
+########### ENVIRONMENT2  ###################
+Host environment2-dbtools
+    HostName environment2-dbt.2-transfer.com
+    ProxyJump environment2-bastion
+########### ENVIRONMENT3  #################
+Host environment3-dbtools
+    HostName environment3-dbt.3-transfer.com
+    ProxyJump environment3-bastion
+########### ENVIRONMENT4 #############
+Host environment4-dbtools
+    HostName environment4-dbt.4-transfer.com
+    ProxyJump environment4-bastion
+########### ENVIRONMENT5 #############
+Host environment5-dbtools
+    HostName environment5-dbt.5-transfer.com
+    ProxyJump environment5-bastion
+########## ENVIRONMENT6 #############
+Host environment6-dbtools
+    HostName environment6-dbt.6-transfer.com
+    ProxyJump environment6-bastion
+##########  ENVIRONMENT7 ###############
+Host environment7-dbtools
+    HostName environment7-dbt.7-transfer.com
+    ProxyJump environment7-bastion
+
+##########################################
+# PROXY-COMMAND to JUMP HOSTS
+##########################################
+### Hosts only reachable via bastion and dbtools.
+
+########### ENVIRONMENT 1 , 2 , 3 , 4 #############
+Host *.eu-west-1.compute.internal
+    ProxyJump environment1-dbtools   # Only change to correct platform to access (Because all of them use eu-west-1...)
+    #ProxyJump environment2-dbtools
+    #ProxyJump environment3-dbtools
+    #ProxyJump environment4-dbtools
+
+########### ENVIRONMENT5 ###################
+Host *.ec2.internal
+    ProxyJump environment5-dbtools
+
+########### ENVIRONMENT6  #################
+Host *.ap-southeast-1.compute.internal
+    ProxyJump environment5-dbtools
+
+########## ENVIRONMENT7 #############
+Host *.eu-central-1.compute.internal
+    ProxyJump environment7-dbtools
